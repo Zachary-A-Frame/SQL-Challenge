@@ -1,3 +1,11 @@
+-- drop table Employees CASCADE;
+-- drop table Departments CASCADE;
+-- drop table deptartment_emp CASCADE;
+-- drop table dept_manager CASCADE;
+-- drop table Salaries CASCADE;
+-- drop table Titles CASCADE;
+
+
 -- Creating Table for Employees.csv
 
 -- CREATE TABLE Employees (
@@ -10,49 +18,70 @@
 -- 	hire_date DATE NOT NULL
 -- );
 
+-- -- Creating Table for Departments
 
--- Creating Table for Salaries.csv
+-- CREATE TABLE Departments (
+-- 	dept_no VARCHAR(10),
+-- 	dept_name VARCHAR(30),
+-- 		PRIMARY KEY (dept_no)
+-- );
+
+-- -- Creating Table for Department Employees 
+
+-- CREATE  TABLE Department_Employees (
+-- 	emp_no INT NOT NULL,
+-- 	FOREIGN KEY (emp_no) REFERENCES Employees(emp_no),
+-- 	dept_no VARCHAR(5),
+-- 	FOREIGN KEY (dept_no) REFERENCES Departments(dept_no)
+-- );
+
+-- -- Creating Table for Dept Managers
+
+-- CREATE TABLE Department_Manager (
+--     dept_no VARCHAR   NOT NULL,
+--     emp_no int   NOT NULL,
+-- 	FOREIGN KEY (emp_no) REFERENCES Employees(emp_no),
+-- 	FOREIGN KEY (dept_no) REFERENCES Departments(dept_no)
+-- );
+
+-- -- Creating Table for Salaries.csv
 
 -- CREATE TABLE Salaries (
--- 	emp_id INT NOT NULL,
--- 	FOREIGN KEY (emp_id) REFERENCES Employees(emp_no),
+-- 	emp_no INT NOT NULL,
+-- 	FOREIGN KEY (emp_no) REFERENCES Employees(emp_no),
 -- 	salary INT NOT NULL
 -- );
 
--- Creating Table for Department Employees 
+-- -- Creating Table for Titles
 
-CREATE  TABLE Dept_emp (
-	emp_id INT NOT NULL,
-	FOREIGN KEY (emp_id) REFERENCES Employees(emp_no),
-	dept_no VARCHAR(5) PRIMARY KEY,
-)
+-- CREATE TABLE Titles (
+-- 	title_id VARCHAR(10),
+-- 	title VARCHAR(30)
+-- );
 
--- Creating Table for Dept. Managers
+SELECT * FROM Employees;
 
-CREATE TABLE Dept_manager (
-	dept_number VARCHAR(5),
-	FOREIGN KEY (dept_number) REFERENCES Dept_emp(dept_no),
-	emp_id INT NOT NULL,
-	FOREIGN KEY (emp_id) REFERENCES Employees(emp_no)
-)
+-- 1. List the following details of each employee: employee number, last name, first name, sex, and salary.
 
--- Creating Table for Titles
+SELECT Employees.emp_no, Employees.last_name, Employees.first_name, Employees.sex, Salaries.salary
+FROM Employees
+INNER JOIN Salaries ON 
+Employees.emp_no = Salaries.emp_no
 
-CREATE TABLE Titles (
-	title_id VARCHAR(5),
-	title VARCHAR(30)
-)
+-- 2. List first name, last name, and hire date for employees who were hired in 1986.
 
--- Creating Table for Departments
+SELECT first_name, last_name, hire_date FROM Employees
+WHERE hire_date >= '1985-12-31' AND Employees.hire_date < '1987-01-01'
 
-CREATE TABLE Departments (
-	dept_number VARCHAR(5),
-	FOREIGN KEY (dept_number) REFERENCES Dept_emp(dept_no),
-	dept_name VARCHAR(30)
-)
+-- 3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
 
+SELECT Department_Manager.emp_no, Department_Manager.dept_no, Departments.dept_no,  Departments.dept_name, Employees.last_name, Employees.first_name 
+FROM ((Department_Manager
+	  INNER JOIN Departments ON Department_Manager.dept_no = Departments.dept_no)
+	  INNER JOIN Employees ON Department_Manager.emp_no = Employees.emp_no)
+	  
+-- 4. 
 
-SELECT * FROM Salaries;
 
 
 
